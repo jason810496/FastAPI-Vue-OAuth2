@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+
+  backend:
+    build: ./server
+    ports:
+      - 5001:5001
+    env_file:
+      - .env
+    volumes:
+      - ./server/:/usr/server/
+    command: python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001
+    depends_on:
+      - db
+
+  frontend:
+    build: ./client
+    volumes:
+      - './client:/app'
+      - '/app/node_modules'
+    ports:
+      - 8080:8080
+
+  db:
+    image: postgres:15.1
+    expose:
+      - 5432
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
+
+networks:
+  default: 
+    name: hello_fastapi
