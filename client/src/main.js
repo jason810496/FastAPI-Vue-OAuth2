@@ -6,7 +6,8 @@ import router from './router';
 
 import './style.css';
 
-const app = createApp(App);
+import api from './api'
+
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'http://localhost:5001/';  // the FastAPI backend
@@ -22,6 +23,8 @@ axios.interceptors.response.use(undefined, function (error) {
     }
   });
   
-  app.use(router);
 
-  app.mount("#app");
+createApp(App)
+  .use(router)
+  .provide("$api", api)
+  .mount("#app");

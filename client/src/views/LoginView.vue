@@ -21,8 +21,11 @@
 <script>
 import axios from 'axios';
 import qs from 'qs';
+import { mapState } from 'vuex';
+
 export default {
     name: 'LoginView',
+    inject: ['$api'],
     data() {
         return {
             status : 'show', // hidden
@@ -40,22 +43,33 @@ export default {
             console.log("this.form",this.form)
             console.log("this.form -> qs",qs.stringify(this.form))
             
-            axios.post('http://localhost:5001/login', qs.stringify(this.form) , { headers: { 'content-type': 'application/x-www-form-urlencoded' } }  )
-            .then((response) => {
-                console.log("after login post");
-                console.log(response);
-                // console.log(response.data);
-                // console.log(response.data.access_token);
-                localStorage.setItem('access_token', response.data.access_token);
-                localStorage.setItem('login', 'true' );
-                console.log("localStorage.getItem('access_token')",localStorage.getItem('access_token'));
+            // axios.post('http://localhost:5001/login', qs.stringify(this.form) , { headers: { 'content-type': 'application/x-www-form-urlencoded' } }  )
+            // .then((response) => {
+            //     console.log("after login post");
+            //     console.log(response);
+            //     // console.log(response.data);
+            //     // console.log(response.data.access_token);
+            //     localStorage.setItem('access_token', response.data.access_token);
+            //     localStorage.setItem('login', 'true' );
+            //     console.log("localStorage.getItem('access_token')",localStorage.getItem('access_token'));
 
-                this.$router.push('/profile');
-            }).catch((err) => {
-                console.log(err);
-                alert("Login failed");
-            });
+            //     this.$router.push('/profile');
+            // }).catch((err) => {
+            //     console.log(err);
+            //     alert("Login failed");
+            // });
             
+            this.$api.v1.auth.login(
+                {
+                    username: this.form.username,
+                    password: this.form.password,
+                },
+                {
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            );
             
         }
     },
