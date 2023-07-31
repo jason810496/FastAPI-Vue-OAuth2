@@ -37,7 +37,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends() ] ):
 # refresh token
 # token is from cookie
 
-@router.post("/refresh")
+@router.post("/refresh", response_model=Token)
 async def refresh(token: Annotated[str ,Cookie()] = None):
     credentials_exception = HTTPException(
         status_code=401,
