@@ -2,8 +2,8 @@
     <!-- Login fail modal -->
     <div 
         v-bind:class="{ 'invisible': !loginFailed }"
-        class="fixed-top mx-5"
-        style="z-index: 999;">
+        class="fixed fixed-top mx-5"
+        style="z-index: 99999;">
         <div class="mx-5 my-5">
             <!-- redirect to login page in 3 seconds -->
             <div class="alert alert-danger" role="alert">
@@ -39,12 +39,10 @@
 </template>
   
 <script>
-import { mapState  } from 'vuex';
-import store from '../store';
 
 export default {
     name: 'RefreshView',
-    inject: ['$api'],
+    inject: ['$api' , '$store' , '$router'],
     data(){
         return {
             loginFailed: false
@@ -55,23 +53,23 @@ export default {
         this.$api.v1.auth.refresh()
         .then( (res) => {
             console.log("res", res);
-            store.dispatch('auth/setAccessToken', res.data.access_token);
-            store.dispatch('auth/setRefreshToken', res.data.refresh_token);
-            store.dispatch("auth/setLastLogin", Date.now());
+            this.$store.dispatch('auth/setAccessToken', res.data.access_token);
+            this.$store.dispatch('auth/setRefreshToken', res.data.refresh_token);
+            this.$store.dispatch("auth/setLastLogin", Date.now());
             setTimeout(() => {
                 this.$router.push('/profile');
-            }, 3000);
+            }, 1000);
         }).catch((error) => {
-            store.dispatch('auth/resetAccessToken');
-            store.dispatch('auth/resetRefreshToken');
-            store.dispatch("auth/resetLastLogin");
+            this.$store.dispatch('auth/resetAccessToken');
+            this.$store.dispatch('auth/resetRefreshToken');
+            this.$store.dispatch("auth/resetLastLogin");
 
             setTimeout(() => {
                 this.loginFailed = true;
-            }, 200);
+            }, 100);
             setTimeout(() => {
                 this.$router.push('/login');
-            }, 1000);
+            }, 1200);
         });
     }
 };

@@ -72,13 +72,10 @@
 </template>
   
 <script>
-import axios from 'axios';
-import store from '../store';
-import router from '../router';
 
 export default {
     name: 'ProfileView',
-    inject: ['$api', '$router'],
+    inject: ['$api' , '$store' , '$router'],
     data() {
         return {
             form: {
@@ -96,7 +93,7 @@ export default {
             this.form.username = res.data.username;
             this.form.birthday = res.data.birthday;
         }).catch((error) => {
-            router.push({ name: 'Refresh' });
+            this.$router.push({ name: 'Refresh' });
         });
     },
     methods: {
@@ -136,20 +133,20 @@ export default {
                     this.updated = false;
                 }, 1000);
             }).catch((error) => {
-                router.push({ name: 'Refresh' });
+                this.$router.push({ name: 'Refresh' });
             });
         },
         changeAccessToken() {
-            store.dispatch('auth/setAccessToken', 'wrongToken');
+            this.$store.dispatch('auth/setAccessToken', 'wrongToken');
             console.log("changeAccessToken");
         },
         changeRefreshToken() {
-            store.dispatch('auth/setRefreshToken', 'wrongToken');
+            this.$store.dispatch('auth/setRefreshToken', 'wrongToken');
             console.log("changeRefreshToken");
         },
         changeBothToken() {
-            store.dispatch('auth/setAccessToken', 'wrongToken');
-            store.dispatch('auth/setRefreshToken', 'wrongToken');
+            this.$store.dispatch('auth/setAccessToken', 'wrongToken');
+            this.$store.dispatch('auth/setRefreshToken', 'wrongToken');
             console.log("changeBothToken");
         },
     },

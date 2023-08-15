@@ -33,19 +33,15 @@
             </div>
         </div>
     </div>
-
 </template>
   
 <script>
-import store from '../store';
-import router from '../router';
 
 export default {
     name: 'LoginView',
-    inject: ['$api'],
+    inject: ['$api' , '$store' , '$router'],
     data() {
         return {
-            status : 'show', // hidden
             form: {
                 username: '',
                 password: '',
@@ -54,18 +50,14 @@ export default {
         };
     },
     methods: {
-        toggle() {
-            this.status = this.status === 'show' ? 'hidden' : 'show';
-        },
-        async submit(){
+        submit(){
             
             this.$api.v1.auth.login(this.form)
             .then((res) => {
-                console.log(res);
-                store.dispatch("auth/setAccessToken", res.data.access_token);
-                store.dispatch("auth/setRefreshToken", res.data.refresh_token);
-                store.dispatch("auth/setLastLogin", Date.now());
-                router.push({ name: 'Profile' });
+                this.$store.dispatch("auth/setAccessToken", res.data.access_token);
+                this.$store.dispatch("auth/setRefreshToken", res.data.refresh_token);
+                this.$store.dispatch("auth/setLastLogin", Date.now());
+                this.$router.push({ name: 'Profile' });
             })
             .catch((err) => {
                 console.log(err);
