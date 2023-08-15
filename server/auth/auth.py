@@ -12,7 +12,7 @@ import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -38,7 +38,7 @@ async def create_access_token(data: dict):
     return encoded_jwt
 
 # create refresh token
-async def create_refresh_token(data: dict):
+async def create_refresh_token(data: dict):    
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=int(os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES",60)))
     
