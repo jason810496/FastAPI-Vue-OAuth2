@@ -3,11 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
-import ForgetView from '../views/ForgetView.vue'
 import LogoutView from '../views/LogoutView.vue'
 import RefreshView from '../views/RefreshView.vue'
 import store from "../store";
-import auth from '../api/v1/auth'
 
 const routes = [
     {
@@ -33,11 +31,6 @@ const routes = [
         name: 'Profile',
         component: ProfileView,
         meta: { requiresAuth: true },
-    },
-    {
-        path: '/forget',
-        name: 'Forget',
-        component: ForgetView,
     },
     {
         path: '/logout',
@@ -69,7 +62,7 @@ router.beforeEach((to, from , next) => {
         if (store.getters["auth/access_token"]){
             console.log("has access token");
             let timeNow = Date.now();
-            if (timeNow - (store.getters["auth/last_login"] || 0) > 300000) {
+            if (timeNow - (store.getters["auth/last_login"] || 0) > 30*60*60 ) {
                 // over 30 minutes 
                 console.log("over 30 minutes");
                 next("/refresh");

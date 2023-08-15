@@ -32,7 +32,7 @@ var instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const access_token = store.getters["auth/access_token"];
-    access_token && (config.headers.Authorization = "Bearer " + access_token);
+    access_token && (config.headers.Authorization = `Bearer ${access_token}`);
     return config;
   },
   (error) => {
@@ -61,7 +61,6 @@ instance.interceptors.response.use(
 
 export default function (method, url, data = null , headers = null) {
   method = method.toUpperCase();
-  let composeUrl = `${url}${data && Object.values(data)[0] ? "/" + Object.values(data)[0] : ""}`;
 
   if( headers ){
     instance.defaults.headers.common = headers;
@@ -69,6 +68,7 @@ export default function (method, url, data = null , headers = null) {
 
   switch (method) {
     case "GET":
+      let composeUrl = `${url}${data && Object.values(data)[0] ? "/" + Object.values(data)[0] : ""}`;
       let params = {};
       if (data && Object.keys(data).length > 1) {
         let i = 0;
@@ -82,9 +82,9 @@ export default function (method, url, data = null , headers = null) {
     case "PUT":
       return instance.put(url, data);
     case "DELETE":
-      return instance.delete(composeUrl, { ...params });
+      return instance.delete(url, data);
     case "PATCH":
-      return instance.patch(composeUrl, { ...params });
+      return instance.patch(url, data);
     default:
       console.log("unknow methods" + method);
       return false;

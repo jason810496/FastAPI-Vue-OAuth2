@@ -22,66 +22,19 @@
 </template>
   
 <script>
-import axios from 'axios';
 export default {
     name: 'HomeView',
+    inject: ['$api'],
     data() {
         return {
             userList: [],
         };
     },
-    async mounted() {
-        await this.getUserList();
-    },
-    methods: {
-        getUserList() {
-            console.log("getUserList");
-
-            axios.get('http://localhost:5001/api/user').then((response) => {
-
-                console.log("response", response);
-                this.userList = response.data;
-            });
-        },
-        updatePassword() {
-            const token = localStorage.getItem('access_token');
-            const payload = {
-                password: this.form.password,
-            };
-            axios.put('http://localhost:5001/user/password', payload,
-                {
-                    headers: { "Authorization": `Bearer ${token}`, "Accept": 'application/json', "Access-Control-Allow-Origin": '*' }
-                }).then((response) => {
-
-                    if (response.status == 200) {
-                        alert("Password updated");
-                    }
-
-                }).catch((error) => {
-                    console.log("error", error);
-                    this.$router.push('/login');
-                });
-        },
-        updateBirthday() {
-            const token = localStorage.getItem('access_token');
-
-            const payload = {
-                birthday: this.form.birthday,
-            };
-            axios.put('http://localhost:5001/user/birthday', payload,
-                {
-                    headers: { "Authorization": `Bearer ${token}`, "Accept": 'application/json', "Access-Control-Allow-Origin": '*' }
-                }).then((response) => {
-
-                    if (response.status == 200) {
-                        alert("Birthday updated");
-                    }
-
-                }).catch((error) => {
-                    console.log("error", error);
-                    this.$router.push('/login');
-                });
-        }
-    },
+    mounted() {
+        this.$api.v1.user.getList()
+        .then((res) => {
+            this.userList = res.data;
+        });
+    }
 };
 </script>

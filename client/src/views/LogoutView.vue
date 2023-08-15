@@ -15,14 +15,13 @@
 </template>
   
 <script>
-import store from '../store';
-
 export default {
     name: 'LoginView',
+    inject: ['$router'],
     created(){
-        store.dispatch('auth/resetAccessToken');
-        store.dispatch('auth/resetRefreshToken');
-        store.dispatch('auth/resetLastLogin');
+        this.$store.dispatch('auth/resetAccessToken');
+        this.$store.dispatch('auth/resetRefreshToken');
+        this.$store.dispatch('auth/resetLastLogin');
 
         setTimeout(() => {
             this.$router.push({ name: 'Login' });

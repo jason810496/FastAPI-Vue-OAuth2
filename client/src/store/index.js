@@ -5,7 +5,7 @@ import auth from './modules/auth';
 import user from './modules/user';
 import view from './modules/view';
 
-export default createStore({
+const store = createStore({
   state: {},
   mutations: {},
   actions: {},
@@ -21,3 +21,5 @@ export default createStore({
     }),
   ],
 });
+
+export default store;

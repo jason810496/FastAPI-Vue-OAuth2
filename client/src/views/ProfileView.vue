@@ -56,89 +56,99 @@
             </div>
         </div>
     </div>
+
+    <div v-bind:class="{'invisible': !updated}"
+        class="fixed container center fixed-top"
+        style="z-index: 999;">
+        <div class="mx-5">
+            <div class="mx-5 my-5">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading" >{{ subject }}</h4>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
   
 <script>
-import axios from 'axios';
-import store from '../store';
-import router from '../router';
 
 export default {
     name: 'ProfileView',
-    inject: ['$api', '$router'],
+    inject: ['$api' , '$store' , '$router'],
     data() {
         return {
             form: {
                 username: '',
                 password: '',
             },
+            updated: false,
+            subject: '',
         };
     },
     mounted() {
         this.$api.v1.user.getMyself()
         .then((res) => {
-            console.log("res", res);
+            console.log("load data while mounted", res);
             this.form.username = res.data.username;
             this.form.birthday = res.data.birthday;
         }).catch((error) => {
-            router.push({ name: 'Refresh' });
+            this.$router.push({ name: 'Refresh' });
         });
     },
     methods: {
+        updatePassword() {
+            const data = {
+                password: this.form.password,
+            };
+            this.$api.v1.user.updatePass(data).then((res) => {
+                this.updated = true;
+                this.subject = "Password updated";
+                this.form.password = '';
+                setTimeout(() => {
+                    this.updated = false;
+                }, 1000);
+            });
+        },
+        updateBirthday() {
+            const data = {
+                birthday: this.form.birthday,
+            };
+            this.$api.v1.user.updateBirth(data).then((res) => {
+                this.updated = true;
+                this.subject = "Birthday updated";
+                setTimeout(() => {
+                    this.updated = false;
+                }, 1000);
+            });
+        },
         reloadData() {
-
             this.$api.v1.user.getMyself()
             .then((res) => {
                 this.form.username = res.data.username;
                 this.form.birthday = res.data.birthday;
+                this.updated = true;
+                this.subject = "Reloaded successfully";
+                setTimeout(() => {
+                    this.updated = false;
+                }, 1000);
             }).catch((error) => {
-                router.push({ name: 'Refresh' });
+                this.$router.push({ name: 'Refresh' });
             });
         },
         changeAccessToken() {
-            store.dispatch('auth/setAccessToken', 'wrongToken');
+            this.$store.dispatch('auth/setAccessToken', 'wrongToken');
             console.log("changeAccessToken");
         },
         changeRefreshToken() {
-            store.dispatch('auth/setRefreshToken', 'wrongToken');
+            this.$store.dispatch('auth/setRefreshToken', 'wrongToken');
             console.log("changeRefreshToken");
         },
         changeBothToken() {
-            store.dispatch('auth/setAccessToken', 'wrongToken');
-            store.dispatch('auth/setRefreshToken', 'wrongToken');
+            this.$store.dispatch('auth/setAccessToken', 'wrongToken');
+            this.$store.dispatch('auth/setRefreshToken', 'wrongToken');
             console.log("changeBothToken");
         },
-        updatePassword() {
-
-            const data = {
-                password: this.form.password,
-            };
-
-            this.$api.v1.user.updatePass(data)
-                .then((res) => {
-                    this.form.password = '';
-                });
-        },
-        updateBirthday() {
-            const token = localStorage.getItem('access_token');
-
-            const payload = {
-                birthday: this.form.birthday,
-            };
-            axios.put('http://localhost:5001/user/birthday', payload,
-                {
-                    headers: { "Authorization": `Bearer ${token}`, "Accept": 'application/json', "Access-Control-Allow-Origin": '*' }
-                }).then((response) => {
-
-                    if (response.status == 200) {
-                        alert("Birthday updated");
-                    }
-
-                }).catch((error) => {
-                    console.log("error", error);
-                    this.$router.push('/login');
-                });
-        }
     },
 };
 </script>
