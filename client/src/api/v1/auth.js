@@ -1,14 +1,15 @@
 import request from '../http.js'
+import axios from 'axios';
+import qs from 'qs';
+import store from '../../store';
+import router from '../../router';
 
 const auth = {
-    register: (data) => {
-        return request('post', '/register', data)
-    },
-    login: (data) => {
-        return request('post', '/login', data)
+    login: async (form) => {
+        return axios.post('/api/auth/login', qs.stringify(form) , { headers: { 'content-type': 'application/x-www-form-urlencoded' } }  )
     },
     refresh: (data) => {
-        return request('post', '/refresh', data)
+        return request('post', '/auth/refresh', data = { 'refresh_token' : store.getters['auth/refresh_token' ] } )
     },
 };
 
