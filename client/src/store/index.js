@@ -3,18 +3,17 @@ import createPersistedState from 'vuex-persistedstate'
 
 import auth from './modules/auth';
 import user from './modules/user';
+import view from './modules/view';
 
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
+  state: {},
+  mutations: {},
   actions: {},
-  getters: {
-  },
+  getters: {},
   modules: {
     auth,
     user,
+    view,
   },
   plugins: [
     createPersistedState({

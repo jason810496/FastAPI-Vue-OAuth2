@@ -1,8 +1,8 @@
 export default {
     namespaced: true,
     state: {
-        access_token: "", // jwt token
-        refresh_token: "", // jwt token
+        access_token:null, // jwt token
+        refresh_token: null, // jwt token
         last_login: null, // last login time
     },
     getters: {
@@ -28,11 +28,14 @@ export default {
         setRefreshToken({ commit }, token) {
             commit("SET_REFRESH_TOKEN", token);
         },
-        deleteAccessToken({ commit }) {
-            commit("SET_ACCESS_TOKEN", "");
+        resetAccessToken({ commit }) {
+            commit("SET_ACCESS_TOKEN", null);
         },
-        deleteRefreshToken({ commit }) {
-            commit("SET_REFRESH_TOKEN", "");
+        resetRefreshToken({ commit }) {
+            commit("SET_REFRESH_TOKEN", null);
+        },
+        resetLastLogin({ commit }) {
+            commit("SET_LAST_LOGIN", null);
         },
         setLastLogin({ commit }, time) {
             commit("SET_LAST_LOGIN", time);

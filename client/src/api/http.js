@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../store";
+import router from "../router";
 
 const errorHandler = (state, msg) => {
   switch (state) {
@@ -7,7 +8,8 @@ const errorHandler = (state, msg) => {
       console.log("login fail" + msg);
       break;
     case 401:
-      console.log("token timeout");
+      console.log("axios errorHandler : 401 Auth Fail");
+      router.push({ name: "Refresh" });
       break;
     case 403:
       console.log("unauthorized");
@@ -29,8 +31,8 @@ var instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    const token = store.state.auth.token;
-    token && (config.headers.Authorization = "Bearer " + token);
+    const access_token = store.getters["auth/access_token"];
+    access_token && (config.headers.Authorization = "Bearer " + access_token);
     return config;
   },
   (error) => {
@@ -57,31 +59,30 @@ instance.interceptors.response.use(
   }
 );
 
-export default function (method, url, data = null) {
+export default function (method, url, data = null , headers = null) {
   method = method.toUpperCase();
   let composeUrl = `${url}${data && Object.values(data)[0] ? "/" + Object.values(data)[0] : ""}`;
-  let params = {};
 
-  if (data && Object.keys(data).length > 1) {
-    let i = 0;
-    for (let j in data) if (i++ > 0) params[j] = data[j];
-  } else {
-    params = null;
+  if( headers ){
+    instance.defaults.headers.common = headers;
   }
 
   switch (method) {
     case "GET":
+      let params = {};
+      if (data && Object.keys(data).length > 1) {
+        let i = 0;
+        for (let j in data) if (i++ > 0) params[j] = data[j];
+      } else {
+        params = null;
+      }
       return instance.get(composeUrl, { ...params });
-      break;
     case "POST":
       return instance.post(url, data);
-      break;
     case "PUT":
-      return instance.put(composeUrl, { ...params });
-      break;
+      return instance.put(url, data);
     case "DELETE":
       return instance.delete(composeUrl, { ...params });
-      break;
     case "PATCH":
       return instance.patch(composeUrl, { ...params });
     default:
