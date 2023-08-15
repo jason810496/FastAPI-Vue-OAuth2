@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends , status , Cookie
 from auth.auth import oauth2_scheme, create_access_token, validate_user, get_current_user , create_refresh_token
-from schemas.token import Token
+from schemas.token import Token  , RefreshToken
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Optional , Annotated , List
 from datetime import datetime, timedelta , date
@@ -14,7 +14,7 @@ from jose import JWTError, jwt
 
 router = APIRouter()
 
-@router.post("/login" , response_model=Token)
+@router.post("/auth/login" , response_model=Token)
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends() ] ):
     user = await validate_user(form_data.username, form_data.password)
     if not user:
@@ -32,20 +32,21 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends() ] ):
     )
 
     user_crud.update_user_login(form_data.username)
-    return Token(access_token=access_token, refresh_token=refresh_token , token_type="Bearer" , expires_in=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES",30)))
+    expired_time = int(datetime.utcnow().timestamp()) + timedelta(minutes=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES",30))).seconds
+    return Token(access_token=access_token, refresh_token=refresh_token , expires_in=expired_time , token_type="Bearer" )
 
 # refresh token
 # token is from cookie
 
-@router.post("/refresh", response_model=Token)
-async def refresh(token: Annotated[str ,Cookie()] = None):
+@router.post("/auth/refresh", response_model=Token)
+async def refresh(refersh_data: RefreshToken):
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"}
     )
     try:
-        payload = jwt.decode(token, os.environ.get("REFRESH_TOKEN_SECRET"), algorithms=[os.environ.get("JWT_ALGORITHM","HS256")])
+        payload = jwt.decode(refersh_data.refresh_token, os.environ.get("REFRESH_TOKEN_SECRET"), algorithms=[os.environ.get("JWT_ALGORITHM","HS256")])
         username: str = payload.get("username")
         # timeout
         if datetime.utcnow() > datetime.fromtimestamp(payload.get("exp")):
@@ -63,7 +64,8 @@ async def refresh(token: Annotated[str ,Cookie()] = None):
     )
 
     user_crud.update_user_login(username)
-    return Token(access_token=access_token, refresh_token=refresh_token ,expires_in=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES",30)), token_type="Bearer")
+    expired_time = int(datetime.utcnow().timestamp()) + timedelta(minutes=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES",30))).seconds
+    return Token(access_token=access_token, refresh_token=refresh_token ,expires_in=expired_time, token_type="Bearer")
 
 
 @router.post("/user")
@@ -99,6 +101,6 @@ async def update_password( request : user_schema.Password , current_user : user_
 async def update_birthday( request : user_schema.Birthday  , current_user : user_schema.Base = Depends(get_current_user)):
     return user_crud.update_birthday( username=current_user.username ,birthday=request.birthday )
 
-@router.get("/whoami" , response_model=user_schema.Base )
+@router.get("/myself" , response_model=user_schema.Base )
 async def protected( current_user : user_schema.Base = Depends(get_current_user) ):
     return current_user
