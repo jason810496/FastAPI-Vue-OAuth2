@@ -2,7 +2,6 @@ import request from '../http.js'
 import axios from 'axios';
 import qs from 'qs';
 import store from '../../store';
-import router from '../../router';
 
 const auth = {
     login: async (form) => {

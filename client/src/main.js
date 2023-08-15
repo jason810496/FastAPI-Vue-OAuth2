@@ -4,10 +4,11 @@ import axios from 'axios';
 import App from './App.vue';
 import router from './router';
 import store from "./store";
+import api from './api';
 
 import './style.css';
 
-import api from './api'
+
 
 
 axios.defaults.withCredentials = true;
@@ -19,4 +20,6 @@ createApp(App)
   .use(router)
   .use(store)
   .provide("$api", api)
+  .provide("$router", router)
+  .provide("$store", store)
   .mount("#app");
