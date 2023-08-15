@@ -1,5 +1,6 @@
 <script setup>
 import NavBar from "./components/NavBar.vue";
+
 </script>
 
 <template>
@@ -12,9 +13,9 @@ import NavBar from "./components/NavBar.vue";
 <script>
 export default {
   name: 'App',
-    components: {
-      NavBar
-    },
+  components: {
+    NavBar,
+  },
 }
 </script>
 
