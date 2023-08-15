@@ -1,6 +1,6 @@
 <template>
-    <div class="mx-5">
-        <div class="mx-5 my-5">
+    <div class="row d-flex justify-content-center mx-auto mt-5">
+        <div class="col-4 pt-6">
             <form>
                 <div class="form-group">
                     <label for="usernameField">Username</label>
@@ -10,18 +10,35 @@
                     <label for="passwordField">Password</label>
                     <input v-model="form.password" type="password" class="form-control" id="passwordField">
                 </div>
-                <button type="submit" class="btn btn-primary" v-on:click="submit">Login</button>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary" v-on:click="submit">Login</button>
+                </div>
             </form>
         </div>
     </div>
-    
+
+    <!-- notification div for login fail -->
+    <div>
+        <div v-bind:class="{'invisible': !loginFail}"
+            class="fixed-top container center">
+            <div class="mx-5">
+                <div class="mx-5 my-5">
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Login fail</h4>
+                        <p>Username or password is incorrect.</p>
+                        <hr>
+                        <p class="mb-0">Please try again.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </template>
   
 <script>
-import axios from 'axios';
-import qs from 'qs';
-import { mapState } from 'vuex';
+import store from '../store';
+import router from '../router';
 
 export default {
     name: 'LoginView',
@@ -33,6 +50,7 @@ export default {
                 username: '',
                 password: '',
             },
+            loginFail: false,
         };
     },
     methods: {
@@ -40,37 +58,22 @@ export default {
             this.status = this.status === 'show' ? 'hidden' : 'show';
         },
         async submit(){
-            console.log("this.form",this.form)
-            console.log("this.form -> qs",qs.stringify(this.form))
             
-            // axios.post('http://localhost:5001/login', qs.stringify(this.form) , { headers: { 'content-type': 'application/x-www-form-urlencoded' } }  )
-            // .then((response) => {
-            //     console.log("after login post");
-            //     console.log(response);
-            //     // console.log(response.data);
-            //     // console.log(response.data.access_token);
-            //     localStorage.setItem('access_token', response.data.access_token);
-            //     localStorage.setItem('login', 'true' );
-            //     console.log("localStorage.getItem('access_token')",localStorage.getItem('access_token'));
-
-            //     this.$router.push('/profile');
-            // }).catch((err) => {
-            //     console.log(err);
-            //     alert("Login failed");
-            // });
-            
-            this.$api.v1.auth.login(
-                {
-                    username: this.form.username,
-                    password: this.form.password,
-                },
-                {
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded',
-                    },
-                }
-            );
-            
+            this.$api.v1.auth.login(this.form)
+            .then((res) => {
+                console.log(res);
+                store.dispatch("auth/setAccessToken", res.data.access_token);
+                store.dispatch("auth/setRefreshToken", res.data.refresh_token);
+                store.dispatch("auth/setLastLogin", Date.now());
+                router.push({ name: 'Profile' });
+            })
+            .catch((err) => {
+                console.log(err);
+                this.loginFail = true;
+                setTimeout(() => {
+                    this.loginFail = false;
+                }, 1000);
+            })
         }
     },
 };

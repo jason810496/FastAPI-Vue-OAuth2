@@ -1,21 +1,23 @@
 <template>
-    <div class="mx-5">
-        <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">User</th>
-                <th scope="col">Birthday</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(user,idx) in userList" :key="idx">
-                <th scope="row">{{ idx+1 }}</th>
-                <td>@{{ user.username }}</td>
-                <td>{{ user.birthday }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row d-flex justify-content-center mx-auto mt-5">
+        <div class="col-6 pt-6">
+            <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Birthday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(user, idx) in userList" :key="idx">
+                    <th scope="row">{{ idx + 1 }}</th>
+                    <td>@{{ user.username }}</td>
+                    <td>{{ user.birthday }}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
     </div>
 </template>
   
@@ -35,7 +37,7 @@ export default {
         getUserList() {
             console.log("getUserList");
 
-            axios.get('http://localhost:5001/user').then((response) => {
+            axios.get('http://localhost:5001/api/user').then((response) => {
 
                 console.log("response", response);
                 this.userList = response.data;
