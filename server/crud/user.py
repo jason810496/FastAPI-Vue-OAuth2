@@ -1,71 +1,56 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import select , update , delete , insert
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 
-from models.database import SessionLocal
 from models.user import UserModels
 import schemas.user as user_schema
+from auth.utils import get_password_hash
 from typing import List
-from passlib.context import CryptContext
+from schemas.user import Base as UserBase
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+class UserCRUD():
+    db_session = None
+    def __init__(self, db_session: AsyncSession = None):
+        self.db_session = db_session
+    
+    async def get_user_by_username(self, username: str):
+        stmt = select(UserModels).where(UserModels.username == username)
+        result = await self.db_session.execute(stmt)
+        user = result.scalars().first()
+        return user
+    
+    async def get_users(self) -> List[UserBase]:
+        stmt = select(UserModels)
+        result = await self.db_session.execute(stmt)
+        users = result.scalars().all()
+        return users
+    
+    async def create_user(self, user: user_schema.Register) -> UserBase:
+        db_user = UserModels(username=user.username, password=get_password_hash(user.password), birthday=user.birthday )
+        self.db_session.add(db_user)
+        await self.db_session.commit()
+        return db_user
+    
+    async def update_user_login(self, username: str):
+        db_user = await self.get_user_by_username(username)
+        db_user.last_login = datetime.utcnow()
+        await self.db_session.refresh(db_user)
+        return db_user
+    
+    async def update_birthday(self, username : str  , birthday : datetime):
+        stmt = update(UserModels).where(UserModels.username == username).values(birthday=birthday)
+        stmt.execution_options(synchronize_session="fetch")
+        await self.db_session.execute(stmt)
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-def get_user_by_username(username: str):
-    db = SessionLocal()
-    return db.query(UserModels).filter(UserModels.username == username).first()
-
-def get_users():
-    # db = SessionLocal()
-    # result = []
-    # for user in db.query(UserModels).all():
-    #     result.append(UserBase(username=user.username, birthday=user.birthday))
-    # return result
-    db = SessionLocal()
-    return db.query(UserModels).all()
-
-def create_user(user: user_schema.Register):
-    db = SessionLocal()
-    db_user = UserModels(username=user.username, password=get_password_hash(user.password), birthday=user.birthday )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-def update_user_login(username: str):
-    db = SessionLocal()
-    db_user = db.query(UserModels).filter(UserModels.username == username).first()
-    db_user.last_login = datetime.utcnow()
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-def update_birthday(username : str , birthday : datetime):
-    db = SessionLocal()
-    db_user = db.query(UserModels).filter(UserModels.username == username).first()
-    db_user.birthday = birthday
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-def update_password(username: str , password: str ):
-    db = SessionLocal()
-    db_user = db.query(UserModels).filter(UserModels.username == username).first()
-    db_user.password = get_password_hash(password)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-def delete_user(username: str):
-    db = SessionLocal()
-    db_user = db.query(UserModels).filter(UserModels.username == username).first()
-    db.delete(db_user)
-    db.commit()
-    return db_user
-
-def get_user_list():
-    db = SessionLocal()
-    db_user = db.query(UserModels).all()
-    print("db_user_list: ", db_user)
-    return db_user
+    
+    async def update_password(self, username : str , password: str ):
+        stmt = update(UserModels).where(UserModels.username == username).values(password=get_password_hash(password))
+        stmt.execution_options(synchronize_session="fetch")
+        await self.db_session.execute(stmt)
+    
+    async def delete_user(self, username : str ):
+        stmt = delete(UserModels).where(UserModels.username == username)
+        stmt.execution_options(synchronize_session="fetch")
+        await self.db_session.execute(stmt)
+    

@@ -1,4 +1,4 @@
-from .database import Base 
+from database.config import Base 
 from sqlalchemy import Column , VARCHAR , DATE , DateTime
 from datetime import datetime
 
