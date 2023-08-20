@@ -7,9 +7,8 @@ from databases import Database
 from dotenv import load_dotenv
 
 load_dotenv()
-# DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://hello_fastapi:hello_fastapi@localhost/hello_fastapi_dev")
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://hello_fastapi:hello_fastapi@localhost/hello_fastapi_dev")
-DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+
+DATABASE_URL = os.environ.get("DATABASE_URL" )
 
 # Create engine
 engine = create_async_engine(DATABASE_URL, echo=True)

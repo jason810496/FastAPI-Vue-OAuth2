@@ -11,6 +11,9 @@ import os
 from .utils import verify_password, oauth2_scheme
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.config import async_session
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def validate_user(username: str, password: str ):
     async with async_session() as session:

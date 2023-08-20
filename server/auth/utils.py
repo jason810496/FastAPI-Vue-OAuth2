@@ -3,6 +3,9 @@ from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from jose import jwt
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

@@ -12,7 +12,9 @@ import crud.user as user_crud
 from schemas.token import Token , RefreshToken
 from jose import JWTError, jwt
 from crud.user import UserCRUD
+from dotenv import load_dotenv
 
+load_dotenv()
 
 router = APIRouter(prefix="/auth")
 
