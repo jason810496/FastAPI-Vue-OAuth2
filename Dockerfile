@@ -1,7 +1,7 @@
 FROM node:lts-alpine as build-stage
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
-COPY ./client/ .
+COPY ./frontend/ .
 RUN yarn install
 RUN yarn build
 
