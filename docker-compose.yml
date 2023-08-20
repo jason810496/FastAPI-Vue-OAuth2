@@ -1,4 +1,4 @@
-version: '3.8'
+version: '1.0'
 
 services:
   db:
@@ -19,7 +19,8 @@ services:
       - .env
     volumes:
       - ./server/:/usr/server/
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001'
+    # command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001'
+    command: python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001
     restart: always
     depends_on:
       - db
