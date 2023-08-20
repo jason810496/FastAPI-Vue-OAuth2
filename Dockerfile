@@ -1,3 +1,5 @@
+# Dockerfile for the frontend 
+# nginx is used to serve the frontend and forward requests to the backend
 FROM node:lts-alpine as build-stage
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
@@ -9,4 +11,4 @@ RUN yarn build
 FROM nginx:stable-alpine as production-stage
 WORKDIR /app
 COPY --from=build-stage /app/dist /usr/share/nginx/html
-COPY ./conf.d/* /etc/nginx/conf.d/
+COPY ./nginx/* /etc/nginx/conf.d/

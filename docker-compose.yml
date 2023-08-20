@@ -33,7 +33,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./conf.d:/etc/nginx/conf.d
+      - ./nginx:/etc/nginx/conf.d
 
 volumes:
   postgres_data:
