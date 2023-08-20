@@ -30,11 +30,13 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
-    # create database if not exists
+    await database.connect()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
+
 @app.on_event("shutdown")
 async def shutdown():
-    await database.disconnect()
+    if database.is_connected:
+        await database.disconnect()
