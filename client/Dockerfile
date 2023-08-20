@@ -1,3 +1,5 @@
+# deveploment docker file
+# in production, we will use nginx to serve the static files
 FROM node:lts-alpine
 
 WORKDIR /app

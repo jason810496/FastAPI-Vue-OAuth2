@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:15.1
+    expose:
+      - 5432
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
 
   backend:
     build: ./server
@@ -10,26 +19,20 @@ services:
       - .env
     volumes:
       - ./server/:/usr/server/
-    command: python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001'
+    restart: always
     depends_on:
       - db
 
-  frontend:
-    build: ./client
-    volumes:
-      - './client:/app'
-      - '/app/node_modules'
+  nginx:
+    build: ./
     ports:
-      - 8080:8080
-
-  db:
-    image: postgres:15.1
-    expose:
-      - 5432
-    env_file:
-      - .env
+      - 80:8080
+    restart: always
+    depends_on:
+      - backend
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - ./conf.d:/etc/nginx/conf.d
 
 volumes:
   postgres_data:

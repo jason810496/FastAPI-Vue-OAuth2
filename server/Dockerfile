@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.9.1-alpine
+FROM python:3.11.1-slim
 
 # set work directory
 WORKDIR /usr/server
@@ -12,13 +12,14 @@ ENV PYTHONUNBUFFERED 1
 COPY ./requirements.txt /usr/server/requirements.txt
 
 # install dependencies
-RUN set -eux \
-    && apk add --no-cache --virtual .build-deps build-base \
-    libressl-dev libffi-dev gcc musl-dev python3-dev \
-    postgresql-dev \
-    && pip install --upgrade pip setuptools wheel \
-    && pip install -r /usr/server/requirements.txt \
-    && rm -rf /root/.cache/pip
+# RUN set -eux \
+#     && apk add --no-cache --virtual .build-deps build-base \
+#     libressl-dev libffi-dev gcc musl-dev python3-dev \
+#     postgresql-dev \
+#     && pip install --upgrade pip setuptools wheel \
+#     && pip install -r /usr/server/requirements.txt \
+#     && rm -rf /root/.cache/pip
+RUN pip install -r requirements.txt
 
 # copy project
 COPY . /usr/server/
