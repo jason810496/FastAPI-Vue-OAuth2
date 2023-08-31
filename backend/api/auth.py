@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth" , tags=["auth"] )
 
 @router.post("/login" , response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends() , db : UserCRUD = Depends(get_user_crud) ):
