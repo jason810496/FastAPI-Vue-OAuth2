@@ -43,7 +43,6 @@
 import { apiRefresh } from '../api/auth';
 export default {
     name: 'RefreshView',
-    inject: ['$api' , '$store' , '$router'],
     data(){
         return {
             loginFailed: false
