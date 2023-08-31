@@ -22,19 +22,14 @@
 </template>
   
 <script>
+import { mapGetters } from 'vuex';
 export default {
     name: 'HomeView',
-    inject: ['$api'],
-    data() {
-        return {
-            userList: [],
-        };
+    created: function(){
+        this.$store.dispatch('user/getUserList');
     },
-    mounted() {
-        this.$api.v1.user.getList()
-        .then((res) => {
-            this.userList = res.data;
-        });
-    }
+    computed: {
+        ...mapGetters({ userList : 'user/userList' })
+    },
 };
 </script>
