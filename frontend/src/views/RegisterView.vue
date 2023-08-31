@@ -44,6 +44,7 @@
 </template>
   
 <script>
+import { apiRegister } from '../api/user';
 export default {
     data() {
         return {
@@ -56,25 +57,19 @@ export default {
             createSuccess: false,
         };
     },
-    inject: ['$api', '$router'],
     methods: {
         isValidDate(dateString) {
             const regEx = /^\d{4}-\d{2}-\d{2}$/;
             return dateString.match(regEx) != null;
         },
-        submit(){
-            const data = {
-                username: this.form.username,
-                password: this.form.password,
-                birthday: this.form.birthday,
-            };
-            this.$api.v1.user.register(data)
+        async submit(){
+            apiRegister(this.form)
             .then( (res) => {
                 this.createSuccess = true;
                 setTimeout(() => {
                     this.$router.push('/login');
                 }, 2000);
-            });  
+            });
             
         }
     },
