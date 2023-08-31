@@ -36,10 +36,9 @@
 </template>
   
 <script>
-
+import { apiLogin } from '../api/auth';
 export default {
     name: 'LoginView',
-    inject: ['$api' , '$store' , '$router'],
     data() {
         return {
             form: {
@@ -50,22 +49,20 @@ export default {
         };
     },
     methods: {
-        submit(){
-            
-            this.$api.v1.auth.login(this.form)
-            .then((res) => {
-                this.$store.dispatch("auth/setAccessToken", res.data.access_token);
-                this.$store.dispatch("auth/setRefreshToken", res.data.refresh_token);
-                this.$store.dispatch("auth/setLastLogin", Date.now());
-                this.$router.push({ name: 'Profile' });
-            })
-            .catch((err) => {
-                console.log(err);
+        async submit(){
+            apiLogin(this.form)
+            .then( (res) => {
+                this.$store.dispatch('auth/setState', res.data);
+                setTimeout(() => {
+                    this.$router.push('/profile');
+                }, 1000);
+            }).catch((error) => {
+                this.$store.dispatch('auth/resetState');
                 this.loginFail = true;
                 setTimeout(() => {
                     this.loginFail = false;
                 }, 1000);
-            })
+            });
         }
     },
 };
