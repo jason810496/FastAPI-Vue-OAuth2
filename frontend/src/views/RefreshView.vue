@@ -40,6 +40,7 @@
   
 <script>
 
+import { apiRefresh } from '../api/auth';
 export default {
     name: 'RefreshView',
     inject: ['$api' , '$store' , '$router'],
@@ -49,20 +50,14 @@ export default {
         }
     },
     mounted(){
-        console.log("RefreshView mounted");
-        this.$api.v1.auth.refresh()
+        apiRefresh()
         .then( (res) => {
-            console.log("res", res);
-            this.$store.dispatch('auth/setAccessToken', res.data.access_token);
-            this.$store.dispatch('auth/setRefreshToken', res.data.refresh_token);
-            this.$store.dispatch("auth/setLastLogin", Date.now());
+            this.$store.dispatch('auth/setState', res.data);
             setTimeout(() => {
                 this.$router.push('/profile');
             }, 1000);
         }).catch((error) => {
-            this.$store.dispatch('auth/resetAccessToken');
-            this.$store.dispatch('auth/resetRefreshToken');
-            this.$store.dispatch("auth/resetLastLogin");
+            this.$store.dispatch('auth/resetState');
 
             setTimeout(() => {
                 this.loginFailed = true;
