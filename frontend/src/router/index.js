@@ -12,19 +12,16 @@ const routes = [
         path: '/',
         name: 'Home',
         component: HomeView,
-        meta: { requiresAuth: false },
     },
     {
         path: '/register',
         name: 'Register',
         component: RegisterView,
-        meta: { requiresAuth: false },
     },
     {
         path: '/login',
         name: 'Login',
         component: LoginView,
-        meta: { requiresAuth: false },
     },
     {
         path: '/profile',
@@ -50,39 +47,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from , next) => {
-    console.log("Router.beforeEach");
-    if(to.name === "Login" && store.getters["auth/last_login"]){
-        console.log("already login");
-        next("/profile");
-        return;
-    }
-
-    if (to.meta.requiresAuth ) {
-        console.log("requiresAuth");
-        if (store.getters["auth/access_token"]){
-            console.log("has access token");
-            let timeNow = Date.now();
-            if (timeNow - (store.getters["auth/last_login"] || 0) > 30*60*60 ) {
-                // over 30 minutes 
-                console.log("over 30 minutes");
-                next("/refresh");
-                return;
-            }
-            else{
-                console.log("under 30 minutes");
-                next();
-                return;
-            }
-        } 
-        else {
-            console.log("no access token");
-            next("/login");
+    if (to.matched.some((record) => record.meta.requiresAuth)) {
+        if (store.getters["auth/isAuthenticated"]) {
+            next();
             return;
         }
-    }
-    else{
+        next("/login");
+    } else {
         next();
-        return;
     }
 
 })
