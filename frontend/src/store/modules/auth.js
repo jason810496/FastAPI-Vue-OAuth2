@@ -3,12 +3,13 @@ export default {
     state: {
         access_token:null, // jwt token
         refresh_token: null, // jwt token
-        last_login: null, // last login time
+        expires_in: null, // expires_in
+        token_type: null, // bearer
     },
     getters: {
+        isAuthenticated: (state) => !!state.access_token && state.expires_in < Date.now(),
         access_token: (state) => state.access_token,
         refresh_token: (state) => state.refresh_token,
-        last_login: (state) => state.last_login,
     },
     mutations: {
         SET_ACCESS_TOKEN(state, token) {
@@ -17,11 +18,26 @@ export default {
         SET_REFRESH_TOKEN(state, token) {
             state.refresh_token = token;
         },
-        SET_LAST_LOGIN(state, time) {
-            state.last_login = time;
+        SET_STATE(state, { access_token, refresh_token, expires_in  , token_type}) {
+            state.access_token = access_token;
+            state.refresh_token = refresh_token;
+            state.expires_in = expires_in;
+            state.token_type = token_type;
+        },
+        RESET_STATE(state) {
+            state.access_token = null;
+            state.refresh_token = null;
+            state.last_login = null;
+            state.token_type = null;
         }
     },
     actions: {
+        setState({ commit }, { access_token, refresh_token, expires_in , token_type }) {
+            commit("SET_STATE", { access_token, refresh_token, expires_in  , token_type});
+        },
+        resetState({ commit }) {
+            commit("RESET_STATE");
+        },
         setAccessToken({ commit }, token) {
             commit("SET_ACCESS_TOKEN", token);
         },
@@ -34,12 +50,6 @@ export default {
         resetRefreshToken({ commit }) {
             commit("SET_REFRESH_TOKEN", null);
         },
-        resetLastLogin({ commit }) {
-            commit("SET_LAST_LOGIN", null);
-        },
-        setLastLogin({ commit }, time) {
-            commit("SET_LAST_LOGIN", time);
-        }
     }
 
 }
