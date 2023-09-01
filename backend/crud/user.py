@@ -1,13 +1,12 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import select , update , delete , insert
-from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 
+from sqlalchemy import select , update , delete 
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
+
+from auth.utils import get_password_hash
 from models.user import UserModels
 import schemas.user as user_schema
-from auth.utils import get_password_hash
-from typing import List
-from schemas.user import Base as UserBase
 
 class UserCRUD():
     db_session = None
@@ -20,13 +19,13 @@ class UserCRUD():
         user = result.scalars().first()
         return user
     
-    async def get_users(self) -> List[UserBase]:
+    async def get_users(self) -> List[user_schema.Base]:
         stmt = select(UserModels)
         result = await self.db_session.execute(stmt)
         users = result.scalars().all()
         return users
     
-    async def create_user(self, user: user_schema.Register) -> UserBase:
+    async def create_user(self, user: user_schema.Register) -> user_schema.Base:
         db_user = UserModels(username=user.username, password=get_password_hash(user.password), birthday=user.birthday )
         self.db_session.add(db_user)
         await self.db_session.commit()

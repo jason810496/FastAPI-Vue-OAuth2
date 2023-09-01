@@ -1,17 +1,15 @@
-
-from crud.dependencies import get_db , get_user_crud
-from schemas.token import Token
-from crud.user import UserCRUD
-from fastapi import Depends, HTTPException
-# for JWT
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-from typing import Optional , Annotated
+from datetime import datetime
 import os
-from .utils import verify_password, oauth2_scheme
-from sqlalchemy.ext.asyncio import AsyncSession
-from database.config import async_session
+
 from dotenv import load_dotenv
+from fastapi import Depends, HTTPException
+from jose import JWTError, jwt
+from typing import Annotated
+
+from database.config import async_session
+from crud.user import UserCRUD
+from .utils import verify_password, oauth2_scheme
+
 
 load_dotenv()
 

@@ -1,18 +1,18 @@
 from datetime import datetime, timedelta
+import os
+
+from dotenv import load_dotenv
+from jose import JWTError, jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from auth.action import  validate_user, get_current_user
-from auth.utils import create_access_token, create_refresh_token
 from schemas.token import Token
-from typing import Annotated
-from datetime import datetime, timedelta
-import os
+
+from auth.action import  validate_user
+from auth.utils import create_access_token, create_refresh_token
 from crud.dependencies import get_user_crud
-import crud.user as user_crud
-from schemas.token import Token , RefreshToken
-from jose import JWTError, jwt
 from crud.user import UserCRUD
-from dotenv import load_dotenv
+from schemas.token import Token , RefreshToken
+
 
 load_dotenv()
 
@@ -38,9 +38,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends() , db : UserCRUD
     db.update_user_login( username=form_data.username )
     expired_time = int(datetime.utcnow().timestamp()) + timedelta(minutes=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES",30))).seconds
     return Token(access_token=access_token, refresh_token=refresh_token , expires_in=expired_time , token_type="Bearer" )
-
-# refresh token
-# token is from cookie
 
 @router.post("/refresh", response_model=Token)
 async def refresh(refersh_data: RefreshToken , db : UserCRUD = Depends(get_user_crud)):

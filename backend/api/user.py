@@ -1,20 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends , status , Cookie
-from auth.action import  validate_user, get_current_user 
-from auth.utils import create_access_token, create_refresh_token
-from schemas.token import Token  , RefreshToken
-from fastapi.security import OAuth2PasswordRequestForm
-from typing import Optional , Annotated , List
-from datetime import datetime, timedelta , date
-import os
-from sqlalchemy.orm import Session
-from crud.dependencies import get_db
-import crud.user as user_crud
-import schemas.user as user_schema
-import schemas.token as token_schema
-from jose import JWTError, jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import APIRouter , Depends, HTTPException, status
+from typing import List
+
+from auth.action import get_current_user 
 from crud.user import UserCRUD
 from crud.dependencies import get_user_crud
+import schemas.user as user_schema
 
 router = APIRouter(prefix="/users" , tags=["users"] )
 

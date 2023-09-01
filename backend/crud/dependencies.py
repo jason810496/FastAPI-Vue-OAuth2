@@ -1,6 +1,7 @@
 from typing import Generator
-from crud.user import UserCRUD
+
 from database.config import async_session
+from crud.user import UserCRUD
 
 
 async def get_db() -> Generator :

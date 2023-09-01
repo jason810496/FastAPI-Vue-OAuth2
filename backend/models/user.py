@@ -1,6 +1,8 @@
-from database.config import Base 
-from sqlalchemy import Column , VARCHAR , DATE , DateTime
 from datetime import datetime
+
+from sqlalchemy import Column , VARCHAR , DATE , DateTime
+
+from database.config import Base 
 
 # Create User class
 class UserModels(Base):
