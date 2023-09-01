@@ -9,6 +9,7 @@ const errorHandler = (state, msg) => {
       break;
     case 401:
       console.log("axios errorHandler : 401 Auth Fail");
+      console.log("axios errorHandler : " + msg);
       router.push({ name: "Refresh" });
       break;
     case 403:
@@ -48,7 +49,7 @@ instance.interceptors.response.use(
   (error) => {
     const { response } = error;
     if (response) {
-      errorHandler(response.status, response.data.error);
+      errorHandler(response.status, response.data);
       return Promise.reject(error);
     } else {
       if (!window.navigator.onLine) {
@@ -77,7 +78,7 @@ export default function (method, url, data = null , headers = null) {
       } else {
         params = null;
       }
-      return instance.get(composeUrl, { ...params });
+      return instance.get(composeUrl, { ...params } );
     case "POST":
       return instance.post(url, data);
     case "PUT":
