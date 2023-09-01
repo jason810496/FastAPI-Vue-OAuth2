@@ -17,12 +17,8 @@
 <script>
 export default {
     name: 'LoginView',
-    inject: ['$router'],
     created(){
-        this.$store.dispatch('auth/resetAccessToken');
-        this.$store.dispatch('auth/resetRefreshToken');
-        this.$store.dispatch('auth/resetLastLogin');
-
+        this.$store.dispatch('auth/resetState');
         setTimeout(() => {
             this.$router.push({ name: 'Login' });
         }, 1000);

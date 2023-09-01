@@ -1,26 +1,40 @@
+import { apiGetUserList } from "../../api/user";
+
 export default {
     namespaced: true,
     state: {
-        username: "",
-        birth: "",
+        userList : [],
+        me : {
+            username : '',
+            birth : '',
+        }
     },
     getters: {
-        username: (state) => state.username,
-        birth: (state) => state.birth,
+        userList: (state) => state.userList,
+        me: (state) => state.me,
+        username: (state) => state.me.username,
+        birth: (state) => state.me.birth,
     },
     mutations: {
+        SET_USER_LIST(state, userList) {
+            state.userList = userList;
+        },
         SET_USERNAME(state, username) {
-            state.username = username;
+            state.me.username = username;
         },
         SET_BIRTH(state, birth) {
-            state.birth = birth;
+            state.me.birth = birth;
         },
     },
     actions: {
-        setUsername({ commit }, username) {
+        async getUserList({commit}){
+            const { data } = await apiGetUserList();
+            commit('SET_USER_LIST', data);
+        },
+        async setUsername({ commit }, username) {
             commit("SET_USERNAME", username);
         },
-        setBirth({ commit }, birth) {
+        async setBirth({ commit }, birth) {
             commit("SET_BIRTH", birth);
         },
     },

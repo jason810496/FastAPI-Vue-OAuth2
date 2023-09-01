@@ -73,9 +73,10 @@
   
 <script>
 
+import { apiGetMyself , apiUpdatePass , apiUpdateBirth } from '../api/user';
+
 export default {
     name: 'ProfileView',
-    inject: ['$api' , '$store' , '$router'],
     data() {
         return {
             form: {
@@ -87,13 +88,11 @@ export default {
         };
     },
     mounted() {
-        this.$api.v1.user.getMyself()
+        apiGetMyself()
         .then((res) => {
             console.log("load data while mounted", res);
             this.form.username = res.data.username;
             this.form.birthday = res.data.birthday;
-        }).catch((error) => {
-            this.$router.push({ name: 'Refresh' });
         });
     },
     methods: {
@@ -101,7 +100,7 @@ export default {
             const data = {
                 password: this.form.password,
             };
-            this.$api.v1.user.updatePass(data).then((res) => {
+            apiUpdatePass(data).then((res) => {
                 this.updated = true;
                 this.subject = "Password updated";
                 this.form.password = '';
@@ -114,7 +113,7 @@ export default {
             const data = {
                 birthday: this.form.birthday,
             };
-            this.$api.v1.user.updateBirth(data).then((res) => {
+            apiUpdateBirth(data).then((res) => {
                 this.updated = true;
                 this.subject = "Birthday updated";
                 setTimeout(() => {
@@ -123,7 +122,7 @@ export default {
             });
         },
         reloadData() {
-            this.$api.v1.user.getMyself()
+            apiGetMyself()
             .then((res) => {
                 this.form.username = res.data.username;
                 this.form.birthday = res.data.birthday;
@@ -132,8 +131,6 @@ export default {
                 setTimeout(() => {
                     this.updated = false;
                 }, 1000);
-            }).catch((error) => {
-                this.$router.push({ name: 'Refresh' });
             });
         },
         changeAccessToken() {

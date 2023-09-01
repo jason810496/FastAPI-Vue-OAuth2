@@ -6,10 +6,6 @@ import user from './modules/user';
 import view from './modules/view';
 
 const store = createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-  getters: {},
   modules: {
     auth,
     user,
