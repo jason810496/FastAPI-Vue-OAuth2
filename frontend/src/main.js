@@ -11,7 +11,7 @@ import './style.css';
 
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:5001/api';  // the FastAPI backend
+axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL || 'http://localhost:5001/api';  // the FastAPI backend
 
   
 
