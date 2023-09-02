@@ -9,6 +9,16 @@
 這個模板使用 FastAPI 與 PostgreSQL 的後端以及 Vue3 作為前端。 <br>
 專案包含 OAuth2 認證與 JWT tokens，以及簡單的使用者 CRUD。
 
+## Demo
+`localhost` 瀏覽前端 <br>
+`localhost:5001/docs` 瀏覽後端 swagger
+
+<a href="https://www.youtube.com/watch?v=EOnzjuOir7o&ab_channel=ZhuDev" target="_blank">
+ <img src="https://raw.githubusercontent.com/jason810496/FastAPI-Vue-OAuth2/main/docs/demo.png" alt="demo" height="300" />
+</a>
+
+點擊圖片觀看 YouTube Demo ☝️
+
 
 ## 功能
 - FastAPI 後端與 PostgreSQL 資料庫

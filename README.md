@@ -4,10 +4,21 @@
 [![Backend : FastAPI](https://img.shields.io/badge/Backend-FastAPI-blue.svg)](https://fastapi.tiangolo.com/)
 [![Frontend : Vue](https://img.shields.io/badge/Frontend-Vue-green.svg)](https://v3.vuejs.org/)
 
-[中文說明](https://github.com/jason810496/FastAPI-Vue-OAuth2/blob/main/README_zh.md)
+[中文說明](https://github.com/jason810496/FastAPI-Vue-OAuth2/blob/main/docs/README_zh.md)
 
 This boilerplate is a starting point for building a FastAPI backend using PostgreSQL with a Vue3 frontend. <br>
 It includes OAuth2 authentication with JWT tokens, and a simple user CRUD.
+
+## Demo
+`localhost` for frontend <br>
+`localhost:5001/docs` for backend swagger docs
+
+<a href="https://www.youtube.com/watch?v=EOnzjuOir7o&ab_channel=ZhuDev" target="_blank">
+ <img src="https://raw.githubusercontent.com/jason810496/FastAPI-Vue-OAuth2/main/docs/demo.png" alt="demo" height="300" />
+</a>
+
+Click image to watch demo video on YouTube ☝️
+
 
 ## Features
 - FastAPI backend with PostgreSQL database
