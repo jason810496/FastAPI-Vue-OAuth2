@@ -80,12 +80,11 @@ It includes OAuth2 authentication with JWT tokens, and a simple user CRUD.
 ## Development
 - Database
 ```
-docker run --name postgres -e POSTGRES_PASSWORD=hello_fastapi -e POSTGRES_USER=hello_fastapi -e POSTGRES_DB=hello_fastapi_dev -p 5432:5432 -d postgres:15.1
+docker run --name postgres -e POSTGRES_USER=fastapi_vue_user -e POSTGRES_PASSWORD=fastapi_vue_password -e POSTGRES_DB=fastapi_vue_dev -p 5432:5432 -d postgres:15.1 -v postgres_data_dev:/var/lib/postgresql/data
 ```
 - Backend
     <br>
     **Note** : shuold change in change `DATABASE_URL` to `DEV_DATABASE_URL` in `backend/.env` <br>
-     ( change hostname from `db` to `localhost` )
     - Poetry
     ```
     cd backend
@@ -111,7 +110,7 @@ docker run --name postgres -e POSTGRES_PASSWORD=hello_fastapi -e POSTGRES_USER=h
     yarn dev
     ```
 
-## Contributing & Issues
+## Issues & PR
 Feel free to open an issue !
 
 Pull requests are welcome. <br>

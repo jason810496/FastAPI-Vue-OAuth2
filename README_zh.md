@@ -80,12 +80,11 @@
 ### 開發環境
 - 資料庫
 ```
-docker run --name postgres -e POSTGRES_PASSWORD=hello_fastapi -e POSTGRES_USER=hello_fastapi -e POSTGRES_DB=hello_fastapi_dev -p 5432:5432 -d postgres:15.1
+docker run --name postgres -e POSTGRES_USER=fastapi_vue_user -e POSTGRES_PASSWORD=fastapi_vue_password -e POSTGRES_DB=fastapi_vue_dev -p 5432:5432 -d postgres:15.1 -v postgres_data_dev:/var/lib/postgresql/data
 ```
 - 後端
     <br>
     **注意** : 需要在 `backend/.env` 中把 `DATABASE_URL` 換成 `DEV_DATABASE_URL`  <br>
-    ( 將  hostname 從 `db` 改為 `localhost` )
     - Poetry
     ```
     cd backend
@@ -111,7 +110,8 @@ docker run --name postgres -e POSTGRES_PASSWORD=hello_fastapi -e POSTGRES_USER=h
     yarn dev
     ```
 
-## 貢獻 & 問題
+## Issues & PR
+
 有任何問題歡迎開 issue !
 
 歡迎發送 pull requests 。
