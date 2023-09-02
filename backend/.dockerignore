@@ -1,2 +1,4 @@
 venv
 Dockerfile
+poetry.lock
+pyproject.toml

@@ -19,7 +19,6 @@ services:
       - .env
     volumes:
       - ./backend/:/usr/backend/
-    # command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001'
     command: python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001
     restart: always
     depends_on:
@@ -40,4 +39,4 @@ volumes:
 
 networks:
   default: 
-    name: hello_fastapi
+    name: fastapi_vue_network
