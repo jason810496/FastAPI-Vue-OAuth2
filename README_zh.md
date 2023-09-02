@@ -4,10 +4,10 @@
 [![Backend : FastAPI](https://img.shields.io/badge/Backend-FastAPI-blue.svg)](https://fastapi.tiangolo.com/)
 [![Frontend : Vue](https://img.shields.io/badge/Frontend-Vue-green.svg)](https://v3.vuejs.org/)
 
-[English description](https://github.com/jason810496/FastAPI-Vue-OAuth2/blob/main/README.md)
+[English description](https://github.com/jason810496/FastAPI-Vue-OAuth2)
 
-這個模板是一個使用 FastAPI 與 PostgreSQL 的後端，以及 Vue 前端的起始點。 <br>
-包含 OAuth2 認證與 JWT tokens，以及簡單的使用者 CRUD。
+這個模板使用 FastAPI 與 PostgreSQL 的後端以及 Vue3 作為前端。 <br>
+專案包含 OAuth2 認證與 JWT tokens，以及簡單的使用者 CRUD。
 
 
 ## 功能

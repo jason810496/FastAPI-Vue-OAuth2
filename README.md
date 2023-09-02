@@ -6,7 +6,7 @@
 
 [中文說明](https://github.com/jason810496/FastAPI-Vue-OAuth2/blob/main/README_zh.md)
 
-This boilerplate is a starting point for building a FastAPI backend using PostgreSQL with a Vue frontend. <br>
+This boilerplate is a starting point for building a FastAPI backend using PostgreSQL with a Vue3 frontend. <br>
 It includes OAuth2 authentication with JWT tokens, and a simple user CRUD.
 
 ## Features
