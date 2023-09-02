@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "fastapi-vue-oauth2-backend"
+version = "0.1.0"
+description = ""
+authors = ["jason810496 <810496@email.wlsh.tyc.edu.tw>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "fastapi_vue_oauth2_backend"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-dotenv = "1.0.0"
+uvicorn = "0.23.1"
+fastapi = "0.100.1"
+sqlalchemy = "1.4.49"
+databases = "0.7.0"
+asyncpg = "0.28.0"
+greenlet = "2.0.2"
+python-multipart = "0.0.6"
+bcrypt = "4.0.1"
+passlib = "1.7.4"
+python-jose = "3.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
