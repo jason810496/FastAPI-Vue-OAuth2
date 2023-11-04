@@ -27,7 +27,7 @@ export default {
         RESET_STATE(state) {
             state.access_token = null;
             state.refresh_token = null;
-            state.last_login = null;
+            state.expires_in = null;
             state.token_type = null;
         }
     },
