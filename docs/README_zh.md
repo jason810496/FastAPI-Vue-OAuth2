@@ -90,7 +90,7 @@
 ### 開發環境
 - 資料庫
 ```
-docker run --name postgres -e POSTGRES_USER=fastapi_vue_user -e POSTGRES_PASSWORD=fastapi_vue_password -e POSTGRES_DB=fastapi_vue_dev -p 5432:5432 -d postgres:15.1 -v postgres_data_dev:/var/lib/postgresql/data
+docker run --name fastapi_vue_oauth2_postgresql -e POSTGRES_USER=fastapi_vue_user -e POSTGRES_PASSWORD=fastapi_vue_password -e POSTGRES_DB=fastapi_vue_dev -p 5432:5432 -d -v postgres_data_dev:/var/lib/postgresql/data postgres:15.1 
 ```
 - 後端
     <br>
