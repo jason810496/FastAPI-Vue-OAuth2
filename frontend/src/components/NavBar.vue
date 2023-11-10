@@ -15,15 +15,19 @@
                         <li class="nav-item">
                             <router-link class="nav-link" to="/profile">Profile</router-link>
                         </li>
-                        <li class="nav-item">
+                        
+                        <li v-if="!isAuthenticated" class="nav-item">
                             <router-link class="nav-link" to="/register">Register</router-link>
                         </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/login">Login</router-link>
-                        </li>
-                        <li class="nav-item">
+
+                        <!-- login/logout button -->
+                        <li v-if="isAuthenticated" class="nav-item">
                             <router-link class="nav-link" to="/logout">Logout</router-link>
                         </li>
+                        <li v-else class="nav-item">
+                            <router-link class="nav-link" to="/login">Login</router-link>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -33,9 +37,15 @@
   
 <script>
 import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
     name: 'NavBar',
+    computed:{
+        ...mapGetters({
+            isAuthenticated: 'auth/isAuthenticated',
+        })
+    }
 });
 </script>
   
