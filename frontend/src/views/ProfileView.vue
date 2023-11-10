@@ -73,7 +73,7 @@
   
 <script>
 
-import { apiGetMyself , apiUpdatePass , apiUpdateBirth } from '../api/user';
+import { apiGetMyself , apiUpdatePass , apiUpdateBirth } from '../api/me';
 
 export default {
     name: 'ProfileView',
