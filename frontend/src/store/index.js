@@ -13,6 +13,7 @@ const store = createStore({
   },
   plugins: [
     createPersistedState({
+      paths: ['auth' ],
       storage: window.localStorage
     }),
   ],
