@@ -2,6 +2,7 @@ import { reactive } from "vue";
 import { apiGetUserList, apiRegister } from "../api/user";
 import { useLoadingStore } from "./loading";
 import { useDialogStore } from "./dialog";
+import router from "../router";
 
 // data provider pattern : 
 // https://www.patterns.dev/vue/data-provider
@@ -47,6 +48,9 @@ async function registerUser(form){
       firstLine: "You can login now",
       secondLine: "This dialog will close in 2 seconds",
     });
+    setTimeout(() => {
+      router.push("/login");
+    },2010);
   })
   .catch((err) => {
     console.log(err);
