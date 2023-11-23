@@ -1,5 +1,7 @@
 <script setup>
 import NavBar from "./components/NavBar.vue";
+import Dialog from "./components/Dialog.vue";
+import Loading from "./components/Loading.vue";
 
 </script>
 
@@ -7,6 +9,8 @@ import NavBar from "./components/NavBar.vue";
   <div id="app">
     <NavBar />
     <router-view />
+    <Loading />
+    <Dialog />
   </div>
 </template>
 
