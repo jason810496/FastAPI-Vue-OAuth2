@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
 import os
-from typing import Union, Annotated
 
 from dotenv import load_dotenv
 from jose import JWTError, jwt
-from fastapi import APIRouter, Depends, HTTPException, status, Cookie, Response
+from fastapi import APIRouter, Depends, HTTPException, status, Cookie, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
 from auth.action import validate_user
@@ -49,7 +48,7 @@ async def login(
         refresh_token,
         httponly=True,
         samesite="strict",
-        secure=True,
+        secure=False,
         expires=timedelta(int(os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES", 30))),
     )
 
@@ -62,8 +61,8 @@ async def login(
 
 @router.post("/refresh", response_model=Token)
 async def refresh(
+    request: Request,
     response: Response,
-    refresh_data: Annotated[Union[str, None], Cookie()] = None,
     db: UserCRUD = Depends(get_user_crud),
 ):
     credentials_exception = HTTPException(
@@ -72,9 +71,12 @@ async def refresh(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        print("refresh_data", refresh_data)
+        refresh_token = request.cookies.get("refresh_token")
+        if not refresh_token:
+            raise credentials_exception
+
         payload = jwt.decode(
-            refresh_data,
+            refresh_token,
             os.environ.get("REFRESH_TOKEN_SECRET"),
             algorithms=[os.environ.get("JWT_ALGORITHM", "HS256")],
         )
@@ -86,6 +88,7 @@ async def refresh(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
+    
 
     access_token = await create_access_token(data={"username": username})
     refresh_token = await create_refresh_token(data={"username": username})
@@ -103,7 +106,7 @@ async def refresh(
         refresh_token,
         httponly=True,
         samesite="strict",
-        secure=True,
+        secure=False,
         expires=timedelta(int(os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES", 30))),
     )
 
@@ -112,3 +115,8 @@ async def refresh(
         expires_in=expired_time,
         token_type="Bearer",
     )
+
+@router.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie("refresh_token")
+    return {"message": "Logout successfully"}
