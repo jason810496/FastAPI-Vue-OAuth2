@@ -5,7 +5,7 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import LogoutView from '../views/LogoutView.vue'
 import RefreshView from '../views/RefreshView.vue'
-import store from "../store";
+import { useAuthStore } from '../store/auth'
 
 const routes = [
     {
@@ -47,8 +47,9 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from , next) => {
+    const auth = useAuthStore();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (store.getters["auth/isAuthenticated"]) {
+        if (auth.isAuthenticated) {
             next();
             return;
         }
