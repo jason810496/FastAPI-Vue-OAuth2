@@ -4,14 +4,14 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="usernameField">Username</label>
-                    <input v-model="form.username" readonly type="text" class="form-control" id="usernameField">
+                    <input v-model="me.username" readonly type="text" class="form-control" id="usernameField">
                 </div>
                 <div class="row">
                     <div class="col">
                         <form class="form-group">
                             <div class="form-group mx-sm-3">
                                 <label for="passwordField">New Password</label>
-                                <input v-model="form.password" type="text" class="form-control" id="passwordField"
+                                <input v-model="me.password" type="text" class="form-control" id="passwordField"
                                     placeholder="new password">
                             </div>
                             <button type="submit" class="btn btn-primary mx-3" v-on:click="updatePassword">update
@@ -22,7 +22,7 @@
                         <form class="form-group">
                             <div class="form-group mx-sm-3">
                                 <label for="birthdayField">birthday</label>
-                                <input v-model="form.birthday" type="date" class="form-control" id="birthdayField">
+                                <input v-model="me.birthday" type="date" class="form-control" id="birthdayField">
 
                             </div>
                             <button type="submit" class="btn btn-primary mx-3" v-on:click="updateBirthday">update
@@ -48,104 +48,24 @@
                 <div class="col-6">
                     <div class="col-9 alert alert-danger">
                         <div class="col-12 mb-3 text-center">Set to wrong token :</div>
-                        <div class="btn btn-danger col-12 mb-3" v-on:click="changeBothToken">Both Token</div>
                         <div class="btn btn-danger col-12 mb-3" v-on:click="changeAccessToken">Access Token</div>
-                        <div class="btn btn-danger col-12 mb-3" v-on:click="changeRefreshToken">Refresh Token</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div v-bind:class="{'invisible': !updated}"
-        class="fixed container center fixed-top"
-        style="z-index: 999;">
-        <div class="mx-5">
-            <div class="mx-5 my-5">
-                <div class="alert alert-success" role="alert">
-                    <h4 class="alert-heading" >{{ subject }}</h4>
-                    <hr>
-                </div>
-            </div>
-        </div>
-    </div>
 </template>
   
-<script>
+<script setup>
+import { useProfile } from '../store/me';
 
-import { apiGetMyself , apiUpdatePass , apiUpdateBirth } from '../api/me';
+const { 
+    me,
+    reloadData,
+    updatePassword,
+    updateBirthday,
+    changeAccessToken,
+} = useProfile();
 
-export default {
-    name: 'ProfileView',
-    data() {
-        return {
-            form: {
-                username: '',
-                password: '',
-            },
-            updated: false,
-            subject: '',
-        };
-    },
-    mounted() {
-        apiGetMyself()
-        .then((res) => {
-            console.log("load data while mounted", res);
-            this.form.username = res.data.username;
-            this.form.birthday = res.data.birthday;
-        });
-    },
-    methods: {
-        updatePassword() {
-            const data = {
-                password: this.form.password,
-            };
-            apiUpdatePass(data).then((res) => {
-                this.updated = true;
-                this.subject = "Password updated";
-                this.form.password = '';
-                setTimeout(() => {
-                    this.updated = false;
-                }, 1000);
-            });
-        },
-        updateBirthday() {
-            const data = {
-                birthday: this.form.birthday,
-            };
-            apiUpdateBirth(data).then((res) => {
-                this.updated = true;
-                this.subject = "Birthday updated";
-                setTimeout(() => {
-                    this.updated = false;
-                }, 1000);
-            });
-        },
-        reloadData() {
-            apiGetMyself()
-            .then((res) => {
-                this.form.username = res.data.username;
-                this.form.birthday = res.data.birthday;
-                this.updated = true;
-                this.subject = "Reloaded successfully";
-                setTimeout(() => {
-                    this.updated = false;
-                }, 1000);
-            });
-        },
-        changeAccessToken() {
-            this.$store.dispatch('auth/setAccessToken', 'wrongToken');
-            console.log("changeAccessToken");
-        },
-        changeRefreshToken() {
-            this.$store.dispatch('auth/setRefreshToken', 'wrongToken');
-            console.log("changeRefreshToken");
-        },
-        changeBothToken() {
-            this.$store.dispatch('auth/setAccessToken', 'wrongToken');
-            this.$store.dispatch('auth/setRefreshToken', 'wrongToken');
-            console.log("changeBothToken");
-        },
-    },
-};
 </script>

@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(user, idx) in userList" :key="idx">
+                <tr v-for="(user, idx) in userList.value" :key="idx">
                     <th scope="row">{{ idx + 1 }}</th>
                     <td>@{{ user.username }}</td>
                     <td>{{ user.birthday }}</td>
@@ -21,15 +21,9 @@
     </div>
 </template>
   
-<script>
-import { mapGetters } from 'vuex';
-export default {
-    name: 'HomeView',
-    created: function(){
-        this.$store.dispatch('user/getUserList');
-    },
-    computed: {
-        ...mapGetters({ userList : 'user/userList' })
-    },
-};
+<script setup>
+
+import { useFetchUser } from '../store/user';
+const { userList } = useFetchUser();
+
 </script>

@@ -17,53 +17,26 @@
         </div>
     </div>
 
-    <!-- notification div for login fail -->
-    <div>
-        <div v-bind:class="{'invisible': !loginFail}"
-            class="fixed-top container center">
-            <div class="mx-5">
-                <div class="mx-5 my-5">
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Login fail</h4>
-                        <p>Username or password is incorrect.</p>
-                        <hr>
-                        <p class="mb-0">Please try again.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </template>
   
-<script>
-import { apiLogin } from '../api/auth';
-export default {
-    name: 'LoginView',
-    data() {
-        return {
-            form: {
-                username: '',
-                password: '',
-            },
-            loginFail: false,
-        };
-    },
-    methods: {
-        async submit(){
-            apiLogin(this.form)
-            .then( (res) => {
-                this.$store.dispatch('auth/setState', res.data);
-                setTimeout(() => {
-                    this.$router.push('/profile');
-                }, 1000);
-            }).catch((error) => {
-                this.$store.dispatch('auth/resetState');
-                this.loginFail = true;
-                setTimeout(() => {
-                    this.loginFail = false;
-                }, 1000);
-            });
-        }
-    },
-};
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useAuthStore } from '../store/auth';
+
+const form = ref({
+    username: '',
+    password: ''
+});
+
+const auth = useAuthStore();
+
+const submit = async () => {
+    await auth.login(form.value);
+}
+
+onMounted(() => {
+    auth.refreshForLogin();
+});
+
+
 </script>
