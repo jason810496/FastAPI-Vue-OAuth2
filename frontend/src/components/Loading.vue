@@ -1,7 +1,7 @@
 <template>
     <!-- loading page -->
     <div 
-        v-bind:class="{'invisible': !isLoading}"
+        v-bind:class="{'invisible': !store.isLoading }"
         class="fixed-top h-100 w-100 d-flex align-items-center justify-content-center"
         style="z-index: 9999; background: #00044152;">
         <div class="mx-5">
@@ -22,15 +22,9 @@
 
 </template>
   
-<script>
-import { mapState  } from 'vuex';
+<script setup>
 
-export default {
-    name: 'Loading',
-    computed:{
-        ...mapState('view', {
-            isLoading: state => state.loading
-        }),
-    },
-};
+import { useLoadingStore } from '../store/loading';
+const store = useLoadingStore();
+
 </script>
