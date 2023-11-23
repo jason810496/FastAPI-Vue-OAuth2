@@ -1,8 +1,11 @@
 # FastAPI Vue OAuth2 Boilerplate
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DB : postgresql](https://img.shields.io/badge/DB-postgresql-blue.svg)](https://www.postgresql.org/)
 [![Backend : FastAPI](https://img.shields.io/badge/Backend-FastAPI-blue.svg)](https://fastapi.tiangolo.com/)
 [![Frontend : Vue](https://img.shields.io/badge/Frontend-Vue-green.svg)](https://v3.vuejs.org/)
+
+<img src="https://raw.githubusercontent.com/jason810496/FastAPI-Vue-OAuth2/develop/docs/banner.png" alt="banner" />
 
 [中文說明](https://github.com/jason810496/FastAPI-Vue-OAuth2/blob/main/docs/README_zh.md)
 
@@ -25,7 +28,8 @@ Click image to watch demo video on YouTube ☝️
 - SQLAlchemy CRUD with async support
 - Simple User CRUD
 - OAuth2 authentication with JWT tokens
-- Vue3 frontend with Vuex store
+- Store refresh token in `httpOnly` cookie, access token in memory ( Pinia store )
+- Vue3 frontend with Pinia store
 - Docker Compose for development and production
 
 ## Project Structure & Details
@@ -51,8 +55,7 @@ Click image to watch demo video on YouTube ☝️
 - `Vite`  Frontend build tool
 -  `/views`  Frontend page views
     - use `RefreshView.vue` as middleware to refresh JWT tokens
--  `/store`  Vuex store
-    - `/modules` Vuex modules with `auth.js` and `user.js`
+-  `/store`  Pinia store ( using `Data Provider Patten` )
 -  `/router`  Vue router
 - `/api`  API endpoints
     - `req.js` 
@@ -65,6 +68,8 @@ Click image to watch demo video on YouTube ☝️
     - `POSTGRES_PASSWORD`
     - `POSTGRES_DB`
 - `backend/.env`  for backend
+    - `PORT`
+    - `RELOAD`
     - `DATABASE_URL`  **Should be same as above setting dot file**
     - `JWT_ALGORITHM`
     - `ACCESS_TOKEN_SECRET`
@@ -102,7 +107,8 @@ docker run --name fastapi_vue_oauth2_postgresql -e POSTGRES_USER=fastapi_vue_use
 
     poetry install
     poetry shell
-    uvicorn app:app uvicorn app:app --reload --host 0.0.0.0 --port 5001
+    
+    python3 run.py
     ```
     - Create virtual environment
     ```
@@ -112,7 +118,7 @@ docker run --name fastapi_vue_oauth2_postgresql -e POSTGRES_USER=fastapi_vue_use
     source venv/bin/activate
     pip3 install -r requirements.txt
 
-    python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001
+    python3 run.py
     ```
     - Frontend
     ```
