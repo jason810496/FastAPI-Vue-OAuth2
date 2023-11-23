@@ -15,11 +15,9 @@ services:
     build: ./backend
     ports:
       - 5001:5001
-    env_file:
-      - .env
     volumes:
       - ./backend/:/usr/backend/
-    command: python3 -m uvicorn app:app --reload --host 0.0.0.0 --port 5001
+    command: python3 run.py --prod
     restart: always
     depends_on:
       - db
