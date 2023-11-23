@@ -1,6 +1,6 @@
 import axios from "axios";
-import store from "../store";
 import router from "../router";
+import { useAuthStore } from "../store/auth";
 
 const errorHandler = (state, msg) => {
   switch (state) {
@@ -33,8 +33,8 @@ var instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    const access_token = store.getters["auth/access_token"];
-    access_token && (config.headers.Authorization = `Bearer ${access_token}`);
+    const store = useAuthStore();
+    store.get_access_token && (config.headers.Authorization = `Bearer ${store.get_access_token }`);
     return config;
   },
   (error) => {
