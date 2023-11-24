@@ -21,12 +21,12 @@ if __name__ == "__main__":
     print("args", args.__dict__)
 
     if args.prod:
-        # check out setting/config.py for `ENV_PREFIX` use case
-        os.environ["ENV_PREFIX"] = "production"
-        load_dotenv("setting/production.env")
+        # for production mode
+        # the secret key is set in the environment variable
+        pass
     else:
-        os.environ["ENV_PREFIX"] = ""
-        load_dotenv("setting/.env")
+        # check out setting/config.py for `ENV_PREFIX` use case
+        load_dotenv(".env")
 
     uvicorn.run(
         "app:app",
