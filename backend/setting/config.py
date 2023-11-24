@@ -1,6 +1,5 @@
 import os
 from functools import lru_cache
-from dotenv import load_dotenv
 
 
 class Settings:
@@ -18,6 +17,4 @@ class Settings:
 
 @lru_cache()
 def get_settings():
-    print("ENV_PREFIX", os.getenv("ENV_PREFIX"))
-    load_dotenv(f"{os.getenv('ENV_PREFIX')}.env")
     return Settings()

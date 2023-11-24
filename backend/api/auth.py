@@ -1,8 +1,6 @@
-from datetime import datetime, timedelta
-import os
+from datetime import datetime, timedelta, timezone
 
-from dotenv import load_dotenv
-from jose import JWTError, jwt
+from jose import jwt
 from fastapi import APIRouter, Depends, HTTPException, status, Cookie, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -11,10 +9,9 @@ from auth.utils import create_access_token, create_refresh_token
 from crud.dependencies import get_user_crud
 from crud.user import UserCRUD
 from schemas.token import Token
+from setting.config import get_settings
 
-
-load_dotenv()
-
+settings = get_settings()
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
@@ -37,10 +34,8 @@ async def login(
 
     await db.update_user_login(username=form_data.username)
     expired_time = (
-        int(datetime.utcnow().timestamp())
-        + timedelta(
-            minutes=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
-        ).seconds
+        int(datetime.now(tz=timezone.utc).timestamp() * 1000)
+        + timedelta(minutes=settings.access_token_expire_minutes).seconds * 1000
     )
 
     response.set_cookie(
@@ -49,7 +44,7 @@ async def login(
         httponly=True,
         samesite="strict",
         secure=False,
-        expires=timedelta(int(os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES", 30))),
+        expires=timedelta(settings.refresh_token_expire_minutes),
     )
 
     return Token(
@@ -77,28 +72,25 @@ async def refresh(
 
         payload = jwt.decode(
             refresh_token,
-            os.environ.get("REFRESH_TOKEN_SECRET"),
-            algorithms=[os.environ.get("JWT_ALGORITHM", "HS256")],
+            settings.refresh_token_secret,
+            algorithms=["HS256"],
         )
+
         username: str = payload.get("username")
-        # timeout
-        if datetime.utcnow() > datetime.fromtimestamp(payload.get("exp")):
-            raise credentials_exception
         if username is None:
             raise credentials_exception
-    except JWTError:
+
+    except Exception as e:
+        credentials_exception.detail = str(e)
         raise credentials_exception
-    
 
     access_token = await create_access_token(data={"username": username})
     refresh_token = await create_refresh_token(data={"username": username})
 
     db.update_user_login(username)
     expired_time = (
-        int(datetime.utcnow().timestamp())
-        + timedelta(
-            minutes=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
-        ).seconds
+        int(datetime.now(tz=timezone.utc).timestamp() * 1000)
+        + timedelta(minutes=settings.access_token_expire_minutes).seconds * 1000
     )
 
     response.set_cookie(
@@ -107,7 +99,7 @@ async def refresh(
         httponly=True,
         samesite="strict",
         secure=False,
-        expires=timedelta(int(os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES", 30))),
+        expires=timedelta(settings.refresh_token_expire_minutes),
     )
 
     return Token(
@@ -115,6 +107,7 @@ async def refresh(
         expires_in=expired_time,
         token_type="Bearer",
     )
+
 
 @router.post("/logout")
 async def logout(response: Response):
