@@ -17,15 +17,15 @@ export const useAuthStore = defineStore('auth', () => {
     const get_expires_in = computed(() => expires_in.value);
 
     async function login(form) {
-        access_token.value = access_token;
-        expires_in.value = expires_in;
+        access_token.value = null;
+        expires_in.value = null;
 
         loadingStore.setLoading();
 
         apiLogin(form)
         .then(res => {
             access_token.value = res.data.access_token;
-            expires_in.value = Date.now() + res.data.expires_in * 1000;
+            expires_in.value = res.data.expires_in;
 
             dialogStore.setSuccess({
                 title: 'Login Success',
@@ -87,7 +87,7 @@ export const useAuthStore = defineStore('auth', () => {
         apiRefresh()
         .then(res => {
             access_token.value = res.data.access_token;
-            expires_in.value = Date.now() + res.data.expires_in * 1000;
+            expires_in.value = res.data.expires_in;
 
             dialogStore.setSuccess({
                 title: 'Refresh Success',
@@ -130,7 +130,7 @@ export const useAuthStore = defineStore('auth', () => {
         apiRefresh()
         .then(res => {
             access_token.value = res.data.access_token;
-            expires_in.value = Date.now() + res.data.expires_in * 1000;
+            expires_in.value = res.data.expires_in;
         })
         .catch(err => {
             console.log(err);
