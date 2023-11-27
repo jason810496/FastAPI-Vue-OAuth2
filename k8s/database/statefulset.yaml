@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgresql
+  name: database-statefulset
   namespace: oauth2-fullstack
   labels:
     app: postgresql
