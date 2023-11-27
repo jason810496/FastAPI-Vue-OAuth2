@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: database-service
+  namespace: oauth2-fullstack
+  labels:
+    app: postgresql
+    tier: database
+spec:
+  selector:
+    app: postgresql
+    tier: database
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+    clusterIP: None
