@@ -1,0 +1,29 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: oauth2-fullstack
+  labels:
+    app: fastapi
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: fastapi
+        tier: backend
+    spec:
+      containers:
+        - name: fastapi
+          image: jasonbigcow/oauth2-fastapi
+          ports:
+            - containerPort: 5001
+          envFrom:
+            - secretRef:
+                name: fastapi

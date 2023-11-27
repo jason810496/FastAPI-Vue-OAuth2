@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fastapi
+  namespace: oauth2-fullstack
+  labels:
+    app: fastapi
+    tier: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fastapi
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50

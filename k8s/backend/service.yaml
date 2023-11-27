@@ -1,0 +1,17 @@
+
+apiVersion: fastapi/v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: oauth2-fullstack
+  labels:
+    app: fastapi
+    tier: backend
+spec:
+  selector:
+    app: fastapi
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001
