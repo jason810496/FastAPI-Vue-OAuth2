@@ -4,9 +4,6 @@ kind: StatefulSet
 metadata:
   name: database-statefulset
   namespace: oauth2-fullstack
-  labels:
-    app: postgresql
-    tier: database
 spec:
   serviceName: postgresql
   replicas: 1
@@ -28,7 +25,7 @@ spec:
             - containerPort: 5432
           envFrom:
             - secretRef:
-                name: postgres
+                name: postgresql
           resources:
             requests:
               memory: "256Mi"
@@ -37,14 +34,15 @@ spec:
               memory: "512Mi"
               cpu: "100m"
           volumeMounts:
-            - name: postgresql-data
+            - name: postgresql-pvc
               mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
     - metadata:
-        name: postgresql
-        tier: database
+        name: postgresql-pvc
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "standard"
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
