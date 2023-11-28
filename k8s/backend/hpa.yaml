@@ -1,16 +1,13 @@
 apiVersion: apps/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: fastapi
+  name: backend-hpa
   namespace: oauth2-fullstack
-  labels:
-    app: fastapi
-    tier: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: fastapi
+    name: backend-deployment
   minReplicas: 1
   maxReplicas: 3
   metrics:

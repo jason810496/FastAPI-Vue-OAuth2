@@ -4,11 +4,10 @@ kind: Deployment
 metadata:
   name: backend-deployment
   namespace: oauth2-fullstack
-  labels:
-    app: fastapi
-    tier: backend
 spec:
   replicas: 1
+  strategy:
+      type: RollingUpdate
   selector:
     matchLabels:
       app: fastapi
@@ -21,9 +20,16 @@ spec:
     spec:
       containers:
         - name: fastapi
-          image: jasonbigcow/oauth2-fastapi
-          ports:
-            - containerPort: 5001
           envFrom:
             - secretRef:
                 name: fastapi
+          image: jasonbigcow/oauth2-fastapi
+          ports:
+            - containerPort: 5001
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "100m"
