@@ -13,10 +13,13 @@ services:
 
   backend:
     build: ./backend
+    # image: jasonbigcow/oauth2-fastapi
     ports:
       - 5001:5001
     volumes:
       - ./backend/:/usr/backend/
+    env_file:
+      - ./backend/production.env
     command: python3 run.py --prod
     restart: always
     depends_on:
@@ -24,6 +27,7 @@ services:
 
   nginx:
     build: ./
+    # image: jasonbigcow/oauth2-vue3-nginx
     ports:
       - 80:8080
     restart: always
