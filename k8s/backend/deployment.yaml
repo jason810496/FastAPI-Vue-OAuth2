@@ -23,7 +23,7 @@ spec:
           envFrom:
             - secretRef:
                 name: fastapi
-          image: jasonbigcow/oauth2-fastapi
+          image: jasonbigcow/oauth2-fastapi:linux
           ports:
             - containerPort: 5001
           resources:

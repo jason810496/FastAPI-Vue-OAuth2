@@ -1,11 +1,8 @@
-apiVersion: apps/v1
+apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
   namespace: oauth2-fullstack
-  labels:
-    app: nginx-vue3
-    tier: frontend
 spec:
   selector:
     app: nginx-vue3

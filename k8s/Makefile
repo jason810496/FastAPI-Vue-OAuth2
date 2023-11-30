@@ -42,4 +42,19 @@ test:
 	kubectl apply -f backend/deployment.yaml
 	kubectl apply -f backend/service.yaml
 
-.PHONY: all frontend backend database secrets namespace clear
+image: build push
+
+push:
+	docker push jasonbigcow/oauth2-vue3-nginx:linux
+	docker push jasonbigcow/oauth2-fastapi:linux
+
+build:
+	cd .. && docker build --platform linux/amd64 -t jasonbigcow/oauth2-vue3-nginx:linux .
+	cd ../backend && docker build --platform linux/amd64 -t jasonbigcow/oauth2-fastapi:linux .
+
+build-frontend:
+	cd .. && docker build --platform linux/amd64 -t jasonbigcow/oauth2-vue3-nginx:linux .
+build-backend:
+	cd ../backend && docker build --platform linux/amd64 -t jasonbigcow/oauth2-fastapi:linux .
+
+.PHONY: all frontend backend database secrets namespace clear test-clear test image push build build-frontend build-backend

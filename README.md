@@ -11,6 +11,7 @@
 
 This boilerplate is a starting point for building a FastAPI backend using PostgreSQL with a Vue3 frontend. <br>
 It includes OAuth2 authentication with JWT tokens, and a simple user CRUD.
+<br>
 
 ## Demo
 `localhost` for frontend <br>
@@ -29,7 +30,7 @@ Click image to watch demo video on YouTube ☝️
 - Simple User CRUD
 - OAuth2 authentication with JWT tokens
 - Store refresh token in `httpOnly` cookie, access token in memory ( Pinia store )
-- Vue3 frontend with Pinia store
+- Vue3 frontend with Pinia store using [`Data Provider Patten`](https://www.patterns.dev/vue/data-provider)
 - Docker Compose for development and production
 
 ## Project Structure & Details
@@ -55,7 +56,7 @@ Click image to watch demo video on YouTube ☝️
 - `Vite`  Frontend build tool
 -  `/views`  Frontend page views
     - use `RefreshView.vue` as middleware to refresh JWT tokens
--  `/store`  Pinia store ( using `Data Provider Patten` )
+-  `/store`  Pinia store
 -  `/router`  Vue router
 - `/api`  API endpoints
     - `req.js` 
@@ -93,6 +94,24 @@ Click image to watch demo video on YouTube ☝️
 ### Production
 - `docker-compose up -d --build`
 
+### Advanced : Kubernetes
+
+#### Prerequisites
+- `kubectl`
+- `minikube`
+- `helm`
+
+#### Deployment
+
+- `minikube start`
+- `minikube addons enable ingress`
+- `kubectl apply -f k8s/namespace.yaml`
+- `kubectl apply -f k8s/postgres.yaml`
+- `kubectl apply -f k8s/backend.yaml`
+- `kubectl apply -f k8s/frontend.yaml`
+- `kubectl apply -f k8s/ingress.yaml`
+
+
 ## Development
 - Database
 ```
@@ -107,7 +126,7 @@ docker run --name fastapi_vue_oauth2_postgresql -e POSTGRES_USER=fastapi_vue_use
 
     poetry install
     poetry shell
-    
+
     python3 run.py
     ```
     - Create virtual environment
