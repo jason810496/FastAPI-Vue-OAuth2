@@ -127,6 +127,12 @@ docker run --name fastapi_vue_oauth2_postgresql -e POSTGRES_USER=fastapi_vue_use
     yarn dev
     ```
 
+### Advanced : Kubernetes
+
+```
+Still working on it on features/k8s branch !
+```
+
 ## Issues & PR
 Feel free to open an issue !
 
