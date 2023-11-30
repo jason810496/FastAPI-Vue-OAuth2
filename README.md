@@ -12,6 +12,8 @@
 This boilerplate is a starting point for building a FastAPI backend using PostgreSQL with a Vue3 frontend. <br>
 It includes OAuth2 authentication with JWT tokens, and a simple user CRUD.
 
+> **Note :** For `Vue: Option API` + `VueX` version, please check out [archived-2023-11-22](https://github.com/jason810496/FastAPI-Vue-OAuth2/tree/archived-2023-11-22) branch
+
 ## Demo
 `localhost` for frontend <br>
 `localhost:5001/docs` for backend swagger docs
