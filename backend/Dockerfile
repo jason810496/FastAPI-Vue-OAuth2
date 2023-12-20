@@ -23,3 +23,5 @@ RUN pip install -r requirements.txt
 
 # copy project
 COPY . /usr/backend/
+
+CMD [ "python3", "run.py" , "--prod" ]

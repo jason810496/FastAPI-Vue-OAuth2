@@ -12,3 +12,5 @@ FROM nginx:stable-alpine as production-stage
 WORKDIR /app
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY ./nginx/* /etc/nginx/conf.d/
+
+CMD ["nginx", "-g", "daemon off;"]
