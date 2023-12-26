@@ -31,6 +31,16 @@ namespace:
 clear:
 	kubectl delete -f namespace.yaml
 
+clear-backend:
+	kubectl delete -f backend/deployment.yaml
+	kubectl delete -f backend/service.yaml
+clear-frontend:
+	kubectl delete -f frontend/deployment.yaml
+	kubectl delete -f frontend/service.yaml
+clear-database:
+	kubectl delete -f database/statefulset.yaml
+	kubectl delete -f database/service.yaml
+
 test-clear:
 	# kubectl delete -f frontend/deployment.yaml
 	# kubectl delete -f frontend/service.yaml
@@ -42,10 +52,25 @@ test:
 	kubectl apply -f backend/deployment.yaml
 	kubectl apply -f backend/service.yaml
 
+backend-all: clear-backend backend-docker backend
+
+backend-restart: clear-backend backend
+
+backend-docker: build-backend push-backend
+
 image: build push
 
-push:
+b-i-a: build-backend push-backend 
+
+push: push-frontend push-backend
+
+push-frontend:
 	docker push jasonbigcow/oauth2-vue3-nginx:linux
+	
+push-backend:
+	docker push jasonbigcow/oauth2-fastapi:linux
+
+push-test:
 	docker push jasonbigcow/oauth2-fastapi:linux
 
 build:
@@ -56,5 +81,7 @@ build-frontend:
 	cd .. && docker build --platform linux/amd64 -t jasonbigcow/oauth2-vue3-nginx:linux .
 build-backend:
 	cd ../backend && docker build --platform linux/amd64 -t jasonbigcow/oauth2-fastapi:linux .
+build-test:
+	cd ../backend && docker build --platform linux/amd64 -t jasonbigcow/oauth2-fastapi:linux -f TestDockerfile .
 
-.PHONY: all frontend backend database secrets namespace clear test-clear test image push build build-frontend build-backend
+.PHONY: all frontend backend database secrets namespace clear test-clear test image push build build-frontend build-backend clear-backend clear-frontend clear-database backend-all clear-backend backend-restart backend-build-push push-frontend push-backend push-test b-i-a
