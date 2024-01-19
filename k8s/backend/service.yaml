@@ -4,11 +4,12 @@ metadata:
   name: backend-service
   namespace: oauth2-fullstack
 spec:
-  type: LoadBalancer
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 5001
   selector:
     app: fastapi
     tier: backend
-  ports:
-    - protocol: TCP
-      port: 5001
-      targetPort: 5001
