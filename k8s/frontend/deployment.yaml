@@ -11,7 +11,7 @@ spec:
     matchLabels:
       app: nginx-vue3
       tier: frontend
-  replicas: 3
+  replicas: 1
   strategy:
       type: RollingUpdate
   template:
@@ -23,10 +23,5 @@ spec:
       containers:
         - name: nginx-vue3
           image: jasonbigcow/oauth2-vue3-nginx:linux
-          resources:
-            requests:
-              cpu: 100m
-              memory: 100Mi
-            limits:
-              cpu: 100m
-              memory: 100Mi
+          # imagePullPolicy: Always
+          imagePullPolicy: Never
