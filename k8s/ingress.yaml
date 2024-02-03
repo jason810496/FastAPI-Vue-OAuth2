@@ -7,11 +7,11 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: PUT, GET, POST, OPTIONS, DELETE, PATCH
-    nginx.ingress.kubernetes.io/cors-allow-origin: http://oauth2-fastapi-vue.com , https://oauth2-fastapi-vue.com 
+    nginx.ingress.kubernetes.io/cors-allow-origin: https://api.oauth2-fastapi-vue.com , https://oauth2-fastapi-vue.com 
 spec:
   ingressClassName: nginx
   rules:
-  - host: oauth2-fastapi-vue.com
+  - host: api.oauth2-fastapi-vue.com
     http:
       paths:
       - path: /api
@@ -21,8 +21,11 @@ spec:
             name: backend-service
             port:
               number: 80
+  - host: oauth2-fastapi-vue.com
+    http:
+      paths:
       - path: /
-        pathType: Exact
+        pathType: Prefix
         backend:
           service:
             name: frontend-service
